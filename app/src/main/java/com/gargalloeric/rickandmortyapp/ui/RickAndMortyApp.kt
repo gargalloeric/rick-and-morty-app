@@ -31,7 +31,8 @@ fun RickAndMoryApp(
                 val characterListViewModel: CharacterListViewModel = viewModel(factory = CharacterListViewModel.Factory)
                 CharacterListScreen(
                     modifier = Modifier.fillMaxSize(),
-                    pagingDataFlow = characterListViewModel.getCharacters()
+                    pagingDataFlow = characterListViewModel.getCharacters(),
+                    onClick = { /*TODO: Implement navigation to detail*/ }
                 )
             }
         }
