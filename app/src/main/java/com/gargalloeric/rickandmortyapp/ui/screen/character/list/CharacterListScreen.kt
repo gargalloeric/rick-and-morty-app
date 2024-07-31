@@ -50,27 +50,10 @@ fun CharacterListScreen(
 
         items(count = characters.itemCount) { index ->
             characters[index]?.let { character ->
-                ListItem(
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
-                        .clickable { onClick(character.id) },
-                    headlineContent = {
-                        Row {
-                            AsyncImage(
-                                modifier = Modifier.clip(RoundedCornerShape(5.dp)),
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(character.image)
-                                    .crossfade(true)
-                                    .build(),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Column {
-                                Text(text = character.name, fontWeight = FontWeight.Bold, fontSize = 25.sp)
-                                Text(text = "${character.species} · ${character.status}")
-                            }
-                        }
-                    }
+                CharacterItem(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    character = character,
+                    onClick = onClick
                 )
             }
         }
@@ -85,4 +68,33 @@ fun CharacterListScreen(
             }
         }
     }
+}
+
+@Composable
+fun CharacterItem(
+    modifier: Modifier,
+    character: Character,
+    onClick: (Long) -> Unit
+) {
+    ListItem(
+        modifier = modifier
+            .clickable { onClick(character.id) },
+        headlineContent = {
+            Row {
+                AsyncImage(
+                    modifier = Modifier.clip(RoundedCornerShape(5.dp)),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(character.image)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column {
+                    Text(text = character.name, fontWeight = FontWeight.Bold, fontSize = 25.sp)
+                    Text(text = "${character.species} · ${character.status}")
+                }
+            }
+        }
+    )
 }
