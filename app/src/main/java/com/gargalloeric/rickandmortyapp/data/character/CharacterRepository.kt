@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {
     fun getCharacters(): Flow<PagingData<Character>>
+    suspend fun getCharacter(id: String): Character
 }
 
 class NetworkCharacterRepository(
@@ -21,4 +22,8 @@ class NetworkCharacterRepository(
         ),
         pagingSourceFactory = { CharacterPagingSource(apiService) }
     ).flow
+
+    override suspend fun getCharacter(id: String): Character {
+        return apiService.getCharacter(id)
+    }
 }
