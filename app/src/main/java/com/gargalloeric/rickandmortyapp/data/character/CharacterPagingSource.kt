@@ -42,7 +42,7 @@ class CharacterPagingSource(
         //    initial page, so return null.
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+            anchorPage?.prevKey?.inc() ?: anchorPage?.nextKey?.dec()
         }
     }
 }
