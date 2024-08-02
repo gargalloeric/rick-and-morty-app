@@ -1,5 +1,7 @@
 package com.gargalloeric.rickandmortyapp.ui
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +13,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,13 +27,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.gargalloeric.rickandmortyapp.R
+import com.gargalloeric.rickandmortyapp.ui.screen.character.detail.CharacterDetailScreen
+import com.gargalloeric.rickandmortyapp.ui.screen.character.detail.CharacterDetailViewModel
 import com.gargalloeric.rickandmortyapp.ui.screen.character.list.CharacterListScreen
 import com.gargalloeric.rickandmortyapp.ui.screen.character.list.CharacterListViewModel
 
 enum class Screen {
-    CharacterList
+    CharacterList,
+    CharacterDetail
 }
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RickAndMoryApp(
@@ -68,7 +76,17 @@ fun RickAndMoryApp(
                 CharacterListScreen(
                     modifier = Modifier.fillMaxSize(),
                     pagingDataFlow = characterListViewModel.getCharacters(),
-                    onClick = { /*TODO: Implement navigation to detail*/ }
+                    onClick = { characterId -> navController.navigate("${Screen.CharacterDetail.name}/$characterId") }
+                )
+            }
+
+            composable(route = "${Screen.CharacterDetail.name}/{characterId}") {
+                val characterDetailViewModel: CharacterDetailViewModel = viewModel(factory = CharacterDetailViewModel.Factory)
+                val characterDetailScreenState by characterDetailViewModel.uiStatus.collectAsState()
+                CharacterDetailScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    status = characterDetailScreenState,
+                    onBackClick = { navController.popBackStack() }
                 )
             }
         }
